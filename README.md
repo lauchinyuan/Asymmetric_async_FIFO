@@ -29,7 +29,7 @@
 
 ```verilog
 parameter   RAM_DEPTH        //内部RAM存储器深度
-			RAM_ADDR_WIDTH   //内部RAM读写地址宽度, 值为log2(RAM_DEPTH)
+            RAM_ADDR_WIDTH   //内部RAM读写地址宽度, 值为log2(RAM_DEPTH)
             WR_WIDTH         //写数据位宽
             RD_WIDTH         //读数据位宽
             WR_IND           //单次写操作访问的ram单元个数
@@ -61,7 +61,7 @@ parameter RAM_RD2WR = RAM_RD_WIDTH/RAM_DATA_WIDTH；
 
 ```verilog
   parameter RAM_DEPTH       = 'd1024                        , //内部RAM存储器深度
-			RAM_ADDR_WIDTH  = 'd10                          , //内部RAM读写地址宽度, 值为log2(RAM_DEPTH)
+            RAM_ADDR_WIDTH  = 'd10                          , //内部RAM读写地址宽度, 值为log2(RAM_DEPTH)
             RAM_DEPTH       = 'd64                          , //写数据位宽
             RD_WIDTH        = 'd32                          , //读数据位宽
             WR_IND          = 'd2                           , //单次写操作访问的ram单元个数
