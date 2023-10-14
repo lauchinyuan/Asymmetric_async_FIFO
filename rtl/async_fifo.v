@@ -4,7 +4,7 @@
 // Email: lauchinyuan@yeah.net
 // Create Date: 2023/10/08 16:41:58
 // Module Name: async_fifo
-// Description: 异步FIFO, 支持非对称数据读写操作(读写width不一致),最小数据操作粒度为1byte
+// Description: 异步FIFO, 支持非对称数据读写操作(读写width不一致)
 
 // 参数依赖关系:
 // RAM_ADDR_WIDTH = log2(RAM_DEPTH)
@@ -15,9 +15,6 @@
 // WR_L2  = log2(WR_IND)
 // RD_L2  = log2(RD_IND)
 // RAM_RD2WR = RAM_RD_WIDTH/RAM_DATA_WIDTH
-// RAM_RD_WIDTH = RAM_WIDTH * RAM_RD2WR
-// RAMS_RD_WIDTH = WR_WIDTH * RAM_RD2WR
-// 更改参数后, 请更改 wr_ptr_sync/rd_ptr_sync 补零个数
 
 
 // 举例: 假设存储器深度为32, 则存储器地址线位宽(RAM_ADDR_WIDTH)为5bit
@@ -35,14 +32,12 @@ module async_fifo
             RD_WIDTH        = 'd32                          , //读数据位宽
             WR_IND          = 'd2                           , //单次写操作访问的ram_mem单元个数
             RD_IND          = 'd1                           , //单次读操作访问的ram_mem单元个数         
-            RAM_WIDTH       = RD_WIDTH                      , //写端口数据位宽更小,使用写数据位宽作为RAM存储器的位宽
-            WR_L2           = 'd1                           , //log2(WR_IND), 决定写地址有效数据位个数及RAM位宽
-            RD_L2           = 'd0                           , //log2(RD_IND), 决定读地址有效低位
+            RAM_WIDTH       = RD_WIDTH                      , //RAM基本存储单元位宽
+            WR_L2           = 'd1                           , //log2(WR_IND)
+            RD_L2           = 'd0                           , //log2(RD_IND)
             WR_CNT_WIDTH    = RAM_ADDR_WIDTH + 'd1 - WR_L2  , //FIFO写端口计数器的位宽
             RD_CNT_WIDTH    = RAM_ADDR_WIDTH + 'd1 - RD_L2  , //FIFO读端口计数器的位宽  
-            RAM_RD2WR       = 'd1                           , //读数据位宽和写数据位宽的比, 即一次读取的RAM单元深度, RAM_RD2WR = RD_WIDTH/WR_WIDTH, 当读位宽小于等于写位宽时, 值为1
-            RAM_RD_WIDTH    = RAM_WIDTH * RAM_RD2WR         , //每个双端口RAM模块的读出数据位宽
-            RAMS_RD_WIDTH   = WR_WIDTH * RAM_RD2WR            //多个RAM构成的RAM组合单次读出的数据位宽, 是写位宽的整数倍
+            RAM_RD2WR       = 'd1                             //读数据位宽和写数据位宽的比, 即一次读取的RAM单元深度, 当读位宽小于等于写位宽时, 值为1
 )
 (
         //写相关
@@ -61,7 +56,8 @@ module async_fifo
         output  wire [RD_CNT_WIDTH-1:0]     rd_data_count     //读端口数据个数,按读端口数据位宽计算
     );
     
-
+    localparam  RAM_RD_WIDTH    = RAM_WIDTH * RAM_RD2WR         , //每个双端口RAM模块的读出数据位宽
+                RAMS_RD_WIDTH   = WR_WIDTH * RAM_RD2WR          ;  //多个RAM构成的RAM组合单次读出的数据位宽, 是写位宽的整数倍
     
     //读指针
     wire [RAM_ADDR_WIDTH:0]     rd_ptr          ; //读时钟域下的读指针

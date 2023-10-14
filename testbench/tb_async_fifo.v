@@ -19,14 +19,12 @@ module tb_async_fifo(
               RD_WIDTH        = 'd8                           , //读数据位宽
               WR_IND          = 'd2                           , //单次写操作访问的ram_mem单元个数
               RD_IND          = 'd1                           , //单次读操作访问的ram_mem单元个数         
-              RAM_WIDTH       = RD_WIDTH                      , //写端口数据位宽更小,使用写数据位宽作为RAM存储器的位宽
+              RAM_WIDTH       = RD_WIDTH                      , //RAM存储器的数据位宽
               WR_L2           = 'd1                           , //log2(WR_IND), 决定写地址有效数据位个数及RAM位宽
               RD_L2           = 'd0                           , //log2(RD_IND), 决定读地址有效低位
               WR_CNT_WIDTH    = RAM_ADDR_WIDTH + 'd1 - WR_L2  , //FIFO写端口计数器的位宽
               RD_CNT_WIDTH    = RAM_ADDR_WIDTH + 'd1 - RD_L2  , //FIFO读端口计数器的位宽  
-              RAM_RD2WR       = 'd1                           , //读数据位宽和写数据位宽的比, 即一次读取的RAM单元深度, RAM_RD2WR = RD_WIDTH/WR_WIDTH, 当读位宽小于等于写位宽时, 值为1
-              RAM_RD_WIDTH    = RAM_WIDTH * RAM_RD2WR         , //每个双端口RAM模块的读出数据位宽
-              RAMS_RD_WIDTH   = WR_WIDTH * RAM_RD2WR          ; //多个RAM构成的RAM组合单次读出的数据位宽, 是写位宽的整数倍  */ 
+              RAM_RD2WR       = 'd1                           ; //读数据位宽和写数据位宽的比, 即一次读取的RAM单元深度, RAM_RD2WR = RD_WIDTH/WR_WIDTH, 当读位宽小于等于写位宽时, 值为1
 
     //参数(读写位宽相同)
 /*     parameter RAM_DEPTH       = 'd128                         , //内部RAM存储器深度
@@ -35,14 +33,12 @@ module tb_async_fifo(
               RD_WIDTH        = 'd16                          , //读数据位宽
               WR_IND          = 'd2                           , //单次写操作访问的ram_mem单元个数
               RD_IND          = 'd2                           , //单次读操作访问的ram_mem单元个数         
-              RAM_WIDTH       = 'd8                           , //写端口数据位宽更小,使用写数据位宽作为RAM存储器的位宽
+              RAM_WIDTH       = 'd8                           , //RAM存储器的数据位宽
               WR_L2           = 'd1                           , //log2(WR_IND), 决定写地址有效数据位个数及RAM位宽
               RD_L2           = 'd1                           , //log2(RD_IND), 决定读地址有效低位
               WR_CNT_WIDTH    = RAM_ADDR_WIDTH + 'd1 - WR_L2  , //FIFO写端口计数器的位宽
               RD_CNT_WIDTH    = RAM_ADDR_WIDTH + 'd1 - RD_L2  , //FIFO读端口计数器的位宽  
-              RAM_RD2WR       = 'd1                           , //读数据位宽和写数据位宽的比, 即一次读取的RAM单元深度, RAM_RD2WR = RD_WIDTH/WR_WIDTH, 当读位宽小于等于写位宽时, 值为1
-              RAM_RD_WIDTH    = RAM_WIDTH * RAM_RD2WR         , //每个双端口RAM模块的读出数据位宽
-              RAMS_RD_WIDTH   = WR_WIDTH * RAM_RD2WR          ; //多个RAM构成的RAM组合单次读出的数据位宽, 是写位宽的整数倍  */
+              RAM_RD2WR       = 'd1                           ; //读数据位宽和写数据位宽的比, 即一次读取的RAM单元深度, RAM_RD2WR = RD_WIDTH/WR_WIDTH, 当读位宽小于等于写位宽时, 值为1 */
               
     //参数(读位宽大于写位宽)          
     parameter RAM_DEPTH       = 'd128                         , //内部RAM存储器深度
@@ -51,14 +47,12 @@ module tb_async_fifo(
               RD_WIDTH        = 'd32                          , //读数据位宽
               WR_IND          = 'd2                           , //单次写操作访问的ram_mem单元个数
               RD_IND          = 'd4                           , //单次读操作访问的ram_mem单元个数         
-              RAM_WIDTH       = 'd8                           , //写端口数据位宽更小,使用写数据位宽作为RAM存储器的位宽
+              RAM_WIDTH       = 'd8                           , //RAM存储器的数据位宽
               WR_L2           = 'd1                           , //log2(WR_IND), 决定写地址有效数据位个数及RAM位宽
               RD_L2           = 'd2                           , //log2(RD_IND), 决定读地址有效低位
               WR_CNT_WIDTH    = RAM_ADDR_WIDTH + 'd1 - WR_L2  , //FIFO写端口计数器的位宽
               RD_CNT_WIDTH    = RAM_ADDR_WIDTH + 'd1 - RD_L2  , //FIFO读端口计数器的位宽  
-              RAM_RD2WR       = 'd2                           , //读数据位宽和写数据位宽的比, 即一次读取的RAM单元深度, RAM_RD2WR = RD_WIDTH/WR_WIDTH, 当读位宽小于等于写位宽时, 值为1
-              RAM_RD_WIDTH    = RAM_WIDTH * RAM_RD2WR         , //每个双端口RAM模块的读出数据位宽
-              RAMS_RD_WIDTH   = WR_WIDTH * RAM_RD2WR          ; //多个RAM构成的RAM组合单次读出的数据位宽, 是写位宽的整数倍 
+              RAM_RD2WR       = 'd2                           ; //读数据位宽和写数据位宽的比, 即一次读取的RAM单元深度, RAM_RD2WR = RD_WIDTH/WR_WIDTH, 当读位宽小于等于写位宽时, 值为1
               
     //连线
     //写相关
@@ -129,14 +123,12 @@ module tb_async_fifo(
       .RD_WIDTH        (RD_WIDTH        ), //读数据位宽
       .WR_IND          (WR_IND          ), //单次写操作访问的ram_mem单元个数
       .RD_IND          (RD_IND          ), //单次读操作访问的ram_mem单元个数         
-      .RAM_WIDTH       (RAM_WIDTH       ), //写端口数据位宽更小,使用写数据位宽作为RAM存储器的位宽
+      .RAM_WIDTH       (RAM_WIDTH       ), //RAM存储器的数据位宽
       .WR_CNT_WIDTH    (WR_CNT_WIDTH    ), //FIFO写端口计数器的位宽
       .RD_CNT_WIDTH    (RD_CNT_WIDTH    ), //FIFO读端口计数器的位宽
       .WR_L2           (WR_L2           ), //log2(WR_IND), 决定写地址有效数据位个数及RAM位宽
       .RD_L2           (RD_L2           ), //log2(RD_IND), 决定读地址有效低位 
-      .RAM_RD2WR       (RAM_RD2WR       ), //读数据位宽和写数据位宽的比, 即一次读取的RAM单元深度, RAM_RD2WR = RD_WIDTH/WR_WIDTH, 当读位宽小于等于写位宽时, 值为1
-      .RAM_RD_WIDTH    (RAM_RD_WIDTH    ), //每个双端口RAM模块的读出数据位宽
-      .RAMS_RD_WIDTH   (RAMS_RD_WIDTH   )  //多个RAM构成的RAM组合单次读出的数据位宽, 是写位宽的整数倍      
+      .RAM_RD2WR       (RAM_RD2WR       )  //读数据位宽和写数据位宽的比, 即一次读取的RAM单元深度, RAM_RD2WR = RD_WIDTH/WR_WIDTH, 当读位宽小于等于写位宽时, 值为1   
      )
     async_fifo_inst
     (
